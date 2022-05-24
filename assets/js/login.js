@@ -27,23 +27,23 @@ $(function() {
 
     // 监听注册表单的提交事件
     $('#form_reg').on('submit', function(e) {
-            e.preventDefault()
-            const data = {
-                username: $('#form_reg [name=username]').val(),
-                password: $('#form_reg [name=password]').val()
+        e.preventDefault()
+        const data = {
+            username: $('#form_reg [name=username]').val(),
+            password: $('#form_reg [name=password]').val()
+        }
+        $.post('api/reguser', data,
+            function(res) {
+                if (res.status !== 0) return layer.msg(res.message)
+                layer.msg('注册成功，请登录！')
+                $('#link_login').click().parents('#form_reg')[0].reset()
             }
-            $.post('api/reguser', data,
-                function(res) {
-                    if (res.status !== 0) return layer.msg(res.message)
-                    layer.msg('注册成功，请登录！')
-                    $('#link_login').click().parents('#form_reg')[0].reset()
-                }
-            )
-        })
-        // 监听登录表单的提交事件
+        )
+    })
+
+    // 监听登录表单的提交事件
     $('#form_login').on('submit', function(e) {
         e.preventDefault()
-
         $.ajax({
             method: 'POST',
             url: 'api/login',
