@@ -3,4 +3,10 @@
 // 在这个函数中，可以拿到我们给ajax提供的配置对象，传给形参options
 $.ajaxPrefilter(options => {
     options.url = 'http://api-breakingnews-web.itheima.net/' + options.url
+
+    if (options.url.indexOf('my/') !== -1) {
+        options.headers = {
+            Authorization: localStorage.getItem('token') || '',
+        }
+    }
 })
