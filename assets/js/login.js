@@ -28,13 +28,14 @@ $(function() {
     // 监听注册表单的提交事件
     $('#form_reg').on('submit', function(e) {
         e.preventDefault()
-        $.post('http://www.liulongbin.top:3006/api/reguser', {
+        $.post('http://api-breakingnews-web.itheima.net/api/reguser', {
                 username: $('#form_reg [name=username]').val(),
                 password: $('#form_reg [name=password]').val()
             },
             function(res) {
                 if (res.status !== 0) return console.log(res.message)
                 console.log('注册成功')
-            })
+            }
+        )
     })
 })
