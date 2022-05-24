@@ -27,15 +27,35 @@ $(function() {
 
     // 监听注册表单的提交事件
     $('#form_reg').on('submit', function(e) {
-        e.preventDefault()
-        $.post('http://api-breakingnews-web.itheima.net/api/reguser', {
+            e.preventDefault()
+            const data = {
                 username: $('#form_reg [name=username]').val(),
                 password: $('#form_reg [name=password]').val()
-            },
-            function(res) {
-                if (res.status !== 0) return console.log(res.message)
-                console.log('注册成功')
             }
-        )
+            $.post('api/reguser', data,
+                function(res) {
+                    if (res.status !== 0) return layer.msg(res.message)
+                    layer.msg('注册成功，请登录！')
+                    $('#link_login').click().parents('#form_reg')[0].reset()
+                }
+            )
+        })
+        // 监听登录表单的提交事件
+    $('#form_login').on('submit', function(e) {
+        e.preventDefault()
+
+        $.ajax({
+            method: 'POST',
+            url: 'api/login',
+            data: $(this).serialize(),
+            success: function(res) {
+                if (res.status !== 0) return layer.msg('登录失败！请稍后重试！')
+                layer.msg('登录成功！')
+                    // 将登录成功的到的token字符串，保存到localStorage中
+                localStorage.setItem('token', res.token)
+                    // 跳转到后台主页
+                location.href = '/index.html'
+            }
+        })
     })
 })
