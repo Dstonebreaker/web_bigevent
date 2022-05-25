@@ -9,4 +9,13 @@ $.ajaxPrefilter(options => {
             Authorization: localStorage.getItem('token') || '',
         }
     }
+
+    options.complete = function(res) {
+        // complete回调函数，无论请求成功或失败，最终都会调用
+        // 在complete回调函数中，可以使用res.responseJSON获取服务器响应的数据
+        if (res.responseJSON.status === 1 && res.responseJSON.message === '身份认证失败！') {
+            localStorage.removeItem('token')
+            location.href = '/login.html'
+        }
+    }
 })
