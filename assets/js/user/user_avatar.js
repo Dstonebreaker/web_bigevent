@@ -47,7 +47,9 @@ $(function() {
                 avatar: dataURL,
             },
             success: function(res) {
-
+                if (res.status !== 0) return layer.msg(res.message)
+                layer.msg('更换头像成功！')
+                window.parent.getUserInfo()
             }
         })
     })
