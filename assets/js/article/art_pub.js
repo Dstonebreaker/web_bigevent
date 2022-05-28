@@ -35,4 +35,58 @@ $(function() {
 
     // 3. 初始化裁剪区域
     $image.cropper(options)
+
+    // 为选择封面的按钮，绑定点击事件
+    $('#benChooseImage').on('click', function() {
+        $('#coverFile').click()
+    })
+
+    // 监听coverFile的change事件，获取用户选择的文件列表
+    $('#coverFile').on('change', function(e) {
+        const files = e.target.files
+        if (files.length === 0) return
+        var newImgURL = URL.createObjectURL(files[0])
+        $image
+            .cropper('destroy') // 销毁旧的裁剪区域
+            .attr('src', newImgURL) // 重新设置图片路径
+            .cropper(options) // 重新初始化裁剪区域
+    })
+
+    let art_state = '已发布'
+    $('#btnSave2').on('click', function() {
+        art_state = '草稿'
+    })
+
+    $('#form-pub').on('submit', function(e) {
+        e.preventDefault()
+        const fd = new FormData($(this)[0])
+
+        fd.append('state', art_state)
+
+        $image
+            .cropper('getCroppedCanvas', { // 创建一个 Canvas 画布
+                width: 400,
+                height: 280
+            })
+            .toBlob(function(blob) { // 将 Canvas 画布上的内容，转化为文件对象
+                // 得到文件对象后，进行后续的操作
+                fd.append('cover_img', blob)
+
+                $.ajax({
+                    method: 'POST',
+                    url: 'my/article/add',
+                    data: fd,
+                    // 如果向服务器提交的是FormData格式的数据，必须添加以下两个配置
+                    contentType: false,
+                    processData: false,
+                    success: function(res) {
+                        if (res.status !== 0) return layer.msg(res.message)
+                        layer.msg(res.message)
+                        location.href = '/article/art_list.html'
+                    }
+                })
+            })
+
+
+    })
 })
